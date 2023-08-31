@@ -1,26 +1,26 @@
 #include "../include/manager.h"
 #include "../include/parsing.h"
 
-static t_err	start_program(int fd)
-{
-	char	*line = NULL;
-	char	*new = NULL;
-	char	**file = NULL;
-	do
-	{
-		new = get_next_line(fd);
-		if (new)
-		{
-			line = ft_strfjoin(line, new);
-			free(new);
-		}
-	} while (new);
-	file = ft_split(line, '\n');
-	if (!file)
-		return (m_fail);
-	parsing(file);
-	return (success);	
-}
+// static t_err	start_program(int fd)
+// {
+// 	char	*line = NULL;
+// 	char	*new = NULL;
+// 	char	**file = NULL;
+// 	do
+// 	{
+// 		new = get_next_line(fd);
+// 		if (new)
+// 		{
+// 			line = ft_strfjoin(line, new);
+// 			free(new);
+// 		}
+// 	} while (new);
+// 	file = ft_split(line, '\n');
+// 	if (!file)
+// 		return (m_fail);
+// 	parsing(file);
+// 	return (success);	
+// }
 
 int	main(int ac, char **av)
 {
