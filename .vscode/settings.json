@@ -1,0 +1,7 @@
+{
+	"files.associations": {
+		"*.c": "c",
+		"manager.h": "c",
+		"err.h": "c"
+	}
+}

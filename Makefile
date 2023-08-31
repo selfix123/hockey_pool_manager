@@ -1,51 +1,63 @@
-NAME			=	manager
+#--- LIBRARY NAME ---#
+NAME	= manager
 
-BIN_DIR			=	bin/
+#--- COMMAND VARIABLES ---#
+CC		= gcc
+CFLAGS	= -Wall -Wextra -Werror -g
+RM		= rm -f
+AR		= ar rcs
+MK		= mkdir -p
 
-LIBFT_DIR		=	libft/
+#--- COLORS ---#
+GREEN	=    \033[1;32m
+RED		=    \033[1;31m
+RESET	=     \033[0m
 
-CC				=	gcc
-CFLAGS			=	-Wextra -Wall -Werror
-LIBFT			=	$(LIBFT_DIR)libft.a
+#--- INCLUDE ---#
+INCDIR	= inc
 
-PROMPT_SRCS		=	main.c
+LIB_DIR = lib_ft/
+LIB_FT = libft.a
 
-PROMPT_OBJS		=	$(addprefix ${BIN_DIR}, ${PROMPT_SRCS:.c=.o})
 
-OBJS			=	$(PROMPT_OBJS) \
+#--- SOURCE ---#
+SRCDIR 	= src
+SRC		=	main.c\
+			parsing.c
 
-${BIN_DIR}%.o: ${PROMPT_DIR}%.c
-	@${CC} ${CFLAGS} -c $< -o $@
+VPATH	=    ${SRCDIR}
 
-all: $(BIN_DIR) libft built-in $(NAME)
-	@echo "manager compiled!"
+#--- OBJECT ---#
+OBJDIR	=   obj
+OBJ		= $(addprefix ${OBJDIR}/, ${SRC:.c=.o})
 
-$(NAME): $(OBJS)
-	@echo "Manager compiling"
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+#--- RULES ---#
+${OBJDIR}/%.o:	%.c
+	@${CC} ${CFLAGS} -I${INCDIR} -I. -c $< -o $@
 
-$(BIN_DIR):
-	@mkdir -p $(BIN_DIR)
+all: libft $(NAME)
+
+${NAME}: $(OBJDIR) $(OBJ)
+	@${CC} ${CFLAGS} -I${INCDIR} -o ${NAME} ${OBJ} $(LIB_DIR)$(LIB_FT)
+	@echo "$(NAME)${GREEN} sucessefully compiled :file_folder:.${RESET}"
+
+$(OBJDIR):
+	@$(MK) ${OBJDIR}
+
+run:	all
+	@./${NAMES}
 
 libft:
-	@$(MAKE) -sC $(LIBFT_DIR)
-
-built-in:
-	@$(MAKE) -sC $(BUILT_DIR)
+	@make -C lib_ft
 
 clean:
-	@rm -fr $(BIN_DIR)
-	@$(MAKE) -sC $(LIBFT_DIR) clean
-	@$(MAKE) -sC $(BUILT_DIR) clean
+	@$(RM) $(OBJ)
+	@$(RM)r $(OBJDIR)
 
 fclean: clean
-	@rm -f $(NAME)
-	@$(MAKE) -sC $(LIBFT_DIR) fclean
-	@$(MAKE) -sC $(BUILT_DIR) fclean
+	@$(RM) $(NAME)
+	@echo "$(NAME)${GREEN} object files and executable successfully removed :wastebasket:.${RESET}"
 
-re: fclean all
+re:	fclean all
 
-val: re
-	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --track-fds=yes --suppressions=$(PWD)/supp.txt $(NAME)
-
-.PHONY:	all clean fclean re libft
+.PHONY:	all clean fclean re
